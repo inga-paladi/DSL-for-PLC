@@ -1,4 +1,6 @@
+
 grammar Program;
+
 // Entry rule for the program
 program: 'BEGIN' programName inputDeclarations outputDeclarations memoryDeclarations logicStatements endProgram;
 
@@ -15,10 +17,9 @@ outputDeclarations: 'OUTPUT' var '.' var ';';
 memoryDeclarations: 'RAM' ram '.' ram ';';
 
 // Variable declarations
-var: 'I' x1=x1Value x2=x2Value | 'Q' x1=x1Value x2=x2Value | 'M' x1=x1Value x2=x2Value;
+var: 'I' x2Value | 'Q' x2Value | 'M' x2Value;
 
-// x1 is a fixed value of '0', x2 is a 2-digit number
-x1Value: '0';
+// x2 is a 2-digit number
 x2Value: DIGIT DIGIT;
 
 // RAM declarations
@@ -29,7 +30,7 @@ CN03: 'CN03';
 CN04: 'CN04';
 
 // Coils within RAM
-coils: coil '.' coil;
+coils: coil ('.' coil)*;
 coil: var;
 
 // Logical statements within the program
@@ -48,3 +49,20 @@ endProgram: 'END';
 
 // Skip white space
 WS: [ \t\r\n]+ -> skip;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
