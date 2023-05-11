@@ -1,4 +1,3 @@
-
 grammar Program;
 
 // Entry rule for the program
