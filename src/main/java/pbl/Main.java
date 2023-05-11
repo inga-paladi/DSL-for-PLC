@@ -18,12 +18,11 @@ public class Main {
         ParseTree tree = parser.program();
 
         // Create an instance of your existing listener
-        ProgramBaseListener listener = new ProgramBaseListener();
+        BaseListenerEx listener = new BaseListenerEx();
 
         // Traverse the parse tree using the listener in top-down order
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, tree);
-
 
         // Output the parse tree
         System.out.println(tree.toStringTree(parser));

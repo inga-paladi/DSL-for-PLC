@@ -1,7 +1,13 @@
 grammar Program;
 
 // Entry rule for the program
-program: 'BEGIN' programName inputDeclarations outputDeclarations memoryDeclarations logicStatements endProgram;
+program: 'BEGIN'
+        programName
+        inputDeclarations
+        outputDeclarations
+        memoryDeclarations
+        logicStatements
+        endProgram;
 
 // Identifier for the program
 programName: identifier;
@@ -33,9 +39,14 @@ coils: coil ('.' coil)*;
 coil: var;
 
 // Logical statements within the program
-logicStatements: statement ('.' statement)*;
-statement: var ':=' logicOp;
-logicOp: var 'AND' var | var 'OR' var | var 'XOR' var | 'NOT' var;
+logicStatements: (assignment | statement) ('.' (assignment | statement))*;
+assignment: var ':=' expression ';';
+statement: var logicOp var;
+logicOp: 'AND' | 'OR' | 'XOR' | 'NOT';
+
+// Expression rules
+expression: var | constant;
+constant: DIGIT+;
 
 // Identifier rules
 identifier: ALPHA (ALPHANUM)*;
@@ -48,20 +59,3 @@ endProgram: 'END';
 
 // Skip white space
 WS: [ \t\r\n]+ -> skip;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
