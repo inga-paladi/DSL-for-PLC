@@ -1,17 +1,75 @@
-BEGIN A
+BEGIN TrafficLight;
 
-INPUT
-I 01. I 03;
+// Pedestrian button
+INPUT I11;
 
-OUTPUT
-Q 01. Q 02;
+// Cars lights
+OUTPUT Q01; // Red light
+OUTPUT Q02; // Yellow light
+OUTPUT Q03; // Green light
 
-RAM
-CN01.AND I 01. Q 01. CN04.NOT Q 01.I 01;
+// Pedestrians lights
+OUTPUT Q11; // Red light
+OUTPUT Q12; // Green light
 
-I 01 := 01 ;
-. I 03 := 00;
-. I 01 AND I 03
-. Q 01 NOT I 01
+// Set initial green color on for cars
+Q01 := 0;
+Q02 := 0;
+Q03 := 1;
 
-END
+Q11 := 1;
+Q12 := 0;
+
+LOOP:
+    // Check if pedestrian button is pressed
+    IF I11:
+        Q02 := 1;
+        WAIT 600; // 600 ms
+        Q02 := 0;
+        WAIT 600;
+        Q02 := 1;
+        WAIT 600; // 600 ms
+        Q02 := 0;
+        WAIT 600;
+
+        // Cars red
+        Q01 := 1;
+        Q02 := 0;
+        Q03 := 0;
+
+        // Pedestrians green
+        Q11 := 0;
+        Q12 := 1;
+
+        WAIT 17000; // 17 sec
+
+        Q02 := 1;
+        Q03 := 0;
+        Q12 := 0;
+        WAIT 600;
+        Q03 := 1;
+        Q12 := 1;
+        WAIT 600;
+        Q03 := 0;
+        Q12 := 0;
+        WAIT 600;
+        Q03 := 1;
+        Q12 := 1;
+        WAIT 600;
+
+        // Cars green
+        Q01 := 0;
+        Q02 := 0;
+        Q03 := 1;
+
+        // Pedestrians red
+        Q11 := 1;
+        Q12 := 0;
+
+        WAIT 60000; // wait for 1 minute before next check
+    END IF
+
+    WAIT 200; // 200 ms
+END LOOP
+
+END;

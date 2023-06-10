@@ -1,61 +1,67 @@
 grammar Program;
 
-// Entry rule for the program
-program: 'BEGIN'
-        programName
-        inputDeclarations
-        outputDeclarations
-        memoryDeclarations
-        logicStatements
-        endProgram;
+program:
+    programBegin
+    inputDeclarations
+    outputDeclarations
+    memoryDeclarations?
+    programBody
+    'END';
 
-// Identifier for the program
-programName: identifier;
+programBegin: 'BEGIN' programName ';';
+programName: IDENTIFIER;
 
-// Input declarations
-inputDeclarations: 'INPUT' var '.' var ';';
+inputDeclarations: (inputVarDeclaration)+;
+inputVarDeclaration: 'INPUT' InputVar ';';
+InputVar: 'I' X2Value;
 
-// Output declarations
-outputDeclarations: 'OUTPUT' var '.' var ';';
+outputDeclarations: (outputVarDeclaration)+;
+outputVarDeclaration: 'OUTPUT' OutputVar ';';
+OutputVar: 'Q' X2Value;
 
-// Memory declarations
-memoryDeclarations: 'RAM' ram '.' ram ';';
+memoryDeclarations: (memoryDeclaration)+;
+memoryDeclaration: 'RAM' MemVar ';';
+MemVar: 'M' X2Value;
 
-// Variable declarations
-var: 'I' x2Value | 'Q' x2Value | 'M' x2Value;
+X2Value: DECIM_DIGIT DECIM_DIGIT;
 
-// x2 is a 2-digit number
-x2Value: DIGIT DIGIT;
+programBody: statements infiniteLoop?;
 
-// RAM declarations
-ram: CN01 '.' 'AND' coils | CN02 '.' 'OR' coils | CN03 '.' 'XOR' coils | CN04 '.' 'NOT' coils;
-CN01: 'CN01';
-CN02: 'CN02';
-CN03: 'CN03';
-CN04: 'CN04';
+statements: (conditionalStatement | statement)+;
 
-// Coils within RAM
-coils: coil ('.' coil)*;
-coil: var;
+infiniteLoop:
+    'LOOP:'
+    statements
+    'END LOOP';
 
-// Logical statements within the program
-logicStatements: (assignment | statement) ('.' (assignment | statement))*;
-assignment: var ':=' expression ';';
-statement: var logicOp var;
-logicOp: 'AND' | 'OR' | 'XOR' | 'NOT';
+conditionalStatement: 'IF' condition ':' statements 'END IF';
 
-// Expression rules
-expression: var | constant;
-constant: DIGIT+;
+condition: InputVar | MemVar;
 
-// Identifier rules
-identifier: ALPHA (ALPHANUM)*;
+statement: waitFor | assignment;
+
+NUMBER: [0-9]+;
+
+waitFor: 'WAIT' NUMBER ';';
+
+assignment: (OutputVar | MemVar) ':=' (var | NUMBER | operation) ';';
+
+var: InputVar | OutputVar | MemVar;
+
+operation: operand operator operand;
+
+operand: var | NUMBER;
+
+operator: logicOperator | arithmeticOperator;
+logicOperator: 'AND' | 'OR' | 'XOR' | 'NOT';
+arithmeticOperator: '+' | '-';
+
+IDENTIFIER: ([a-zA-Z][a-zA-Z0-9]*);
 ALPHA: [a-zA-Z];
-ALPHANUM: ALPHA DIGIT;
-DIGIT: [0-7];
-
-// End rule for the program
-endProgram: 'END';
+ALPHANUM: ALPHA | DECIM_DIGIT;
+DECIM_DIGIT: [0-9];
+OCTAL_DIGIT: [0-7];
 
 // Skip white space
 WS: [ \t\r\n]+ -> skip;
+COMMENT: '//' ~[\r\n]* -> skip;
