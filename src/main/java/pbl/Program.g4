@@ -25,7 +25,7 @@ MemVar: 'M' X2Value;
 
 X2Value: DECIM_DIGIT DECIM_DIGIT;
 
-programBody: statements infiniteLoop?;
+programBody: statements? infiniteLoop;
 
 statements: (conditionalStatement | statement)+;
 
