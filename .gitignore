@@ -1,3 +1,7 @@
 out/
 .idea/
 gen/
+.git_old/
+src/main/generated-sources/
+target/
+*.iml

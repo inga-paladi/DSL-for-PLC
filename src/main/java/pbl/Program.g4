@@ -44,13 +44,12 @@ NUMBER: [0-9]+;
 
 waitFor: 'WAIT' NUMBER ';';
 
-assignment: (OutputVar | MemVar) ':=' (var | NUMBER | operation) ';';
-
-var: InputVar | OutputVar | MemVar;
+assignment: lValue ':=' rValue ';';
+lValue: OutputVar | MemVar;
+rValue: InputVar | MemVar | NUMBER | operation;
 
 operation: operand operator operand;
-
-operand: var | NUMBER;
+operand: InputVar | MemVar | NUMBER;
 
 operator: logicOperator | arithmeticOperator;
 logicOperator: 'AND' | 'OR' | 'XOR' | 'NOT';
