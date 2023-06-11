@@ -24,8 +24,7 @@ public class Main {
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, tree);
 
-        // Output the parse tree
-        System.out.println(tree.toStringTree(parser));
-
+        PlcSimulationInterpreter interpreter = new PlcSimulationInterpreter();
+        interpreter.run(tree);
     }
 }
